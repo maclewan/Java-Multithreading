@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+import static java.lang.Integer.parseInt;
+
 public class Wilk extends JFrame implements ActionListener {
 
     private int startingNumberOfRabbits=0;
@@ -55,8 +57,37 @@ public class Wilk extends JFrame implements ActionListener {
         add(podajRabbitsNumber);
         add(podajX);
         add(podajY);
+        add(start);
 
-        
+        podajX.setText("Podaj X");
+        podajX.setBackground(getBackground());
+        podajX.setBounds(610,10, 150,19);
+        podajX.setEditable(false);
+
+        giveX.setBounds(610,30,100,19);
+
+        podajY.setText("Podaj Y");
+        podajY.setBounds(610, 50, 150,19);
+        podajY.setBackground(getBackground());
+        podajY.setEditable(false);
+
+        giveY.setBounds(610,70,100,19);
+
+        podajK.setText("Podaj K");
+        podajK.setBackground(getBackground());
+        podajK.setEditable(false);
+        podajK.setBounds(610, 90, 150, 19);
+
+        giveK.setBounds(610,110,100,19);
+
+        podajRabbitsNumber.setText("Podaj ilość zajęcy");
+        podajRabbitsNumber.setBackground(getBackground());
+        podajRabbitsNumber.setEditable(false);
+        podajRabbitsNumber.setBounds(610, 130, 150, 19);
+
+        giveRabbitsNumber.setBounds(610,150,100,19);
+
+        start.setBounds(610,180,100,24);
 
         {  //dodanie planszy
             Plansza plansza = new Plansza(30, 30, 5);
@@ -64,6 +95,37 @@ public class Wilk extends JFrame implements ActionListener {
             plansza.setBounds(0, 0, 600, 600);
         }
 
+    }
+
+    public boolean validateData(String getx,String gety,String getRabbitsNumber, String getk){
+
+        try{
+            xSize=Integer.parseInt(getx);
+            ySize=Integer.parseInt(gety);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog( null,"Podaj wartości całkowite dla x i y","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        try{
+            startingNumberOfRabbits=Integer.parseInt(getRabbitsNumber);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog( null,"Podaj całkowitą liczbę zajęcy","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        if(startingNumberOfRabbits>=xSize*ySize){
+            JOptionPane.showMessageDialog( null,"Za dużo zajęcy!","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        try{
+            k=Double.parseDouble(getk);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
 
