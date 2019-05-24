@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Plansza extends JPanel {
     JButton[][] buttonsArray;
-    Color defaultColor = new Color(100, 100, 100);
+    private Color defaultColor = new Color(100, 100, 100);
     Color rabbitColor = new Color(1, 250, 1);
     Color wolfColor = new Color(250, 1, 1);
     Color backgroundColor = new Color(1);
