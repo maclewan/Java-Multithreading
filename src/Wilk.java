@@ -304,16 +304,18 @@ public class Wilk extends JFrame implements ActionListener {
     }
 
     private void moveWolf(){
+
         int x=wolf.getxCoord();
         int y=wolf.getyCoord();
         int xVector=0;
         int yVector=0;
         int closetRabbitIndex=0;
+
         ArrayList<Double> distancesToRabbits = new ArrayList<Double>();
         for(int i=0;i<rabbitsList.size();i++){
             double temp=distanceToWolf(rabbitsList.get(i).getxCoord(),rabbitsList.get(i).getyCoord());
            distancesToRabbits.add(temp);
-           if(temp<=distancesToRabbits.get(closetRabbitIndex)){
+           if(temp>=distancesToRabbits.get(closetRabbitIndex)){
                closetRabbitIndex=i;
            }
         }
@@ -361,16 +363,13 @@ public class Wilk extends JFrame implements ActionListener {
         }
         wolf.setxCoord(x);
         wolf.setyCoord(y);
+        plansza.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(plansza.wolfColor);
 
         if(ifThereWasRabbit(x,y)>=0){
             System.out.println("Zabiłem zająca");
-            defeatZając(ifThereWasRabbit());
-
-
+            defeatZając(ifThereWasRabbit(x,y));
+            wolf.setPauseTime5();
         }
-        //czy tam nie bylo zajaca?
-
-        plansza.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(plansza.wolfColor);
     }
 
     private int quaterOfCoord(int x, int y){
@@ -390,7 +389,7 @@ public class Wilk extends JFrame implements ActionListener {
             System.out.println("coś poszło nie tego, ćwiartka sie nie zgadza i w ogóle");
             return 69;
         }
-    }
+    }  //returns quater od coord system where this point was
 
     private int ifThereWasRabbit(int x, int y){
         for(int i=0;i<rabbitsList.size();i++){
@@ -399,7 +398,7 @@ public class Wilk extends JFrame implements ActionListener {
             }
         }
         return -1;
-    }
+    } //returns index of Rabbit if it was there
 
     private void defeatZając(int i){
         rabbitsList.remove(i);
