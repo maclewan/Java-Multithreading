@@ -27,6 +27,7 @@ public class Wilk extends JFrame implements ActionListener {
     private JTextArea podajRabbitsNumber;
 
     private JButton start;
+    private JButton stop;
 
     public Wilk(){
         super("Symulacja");
@@ -38,15 +39,16 @@ public class Wilk extends JFrame implements ActionListener {
         zajacList = new ArrayList<Rabbit>();
         wolf = new Wolf();
 
-        giveK = new JTextField();
-        giveX = new JTextField();
-        giveY= new JTextField();
-        giveRabbitsNumber= new JTextField();
-        podajK = new JTextArea();
-        podajX = new JTextArea();
-        podajY = new JTextArea();
-        podajRabbitsNumber = new JTextArea();
+        giveK = new JTextField("105");
+        giveX = new JTextField("10");
+        giveY= new JTextField("8");
+        giveRabbitsNumber= new JTextField("6");
+        podajK = new JTextArea("Podaj K");
+        podajX = new JTextArea("Podaj X");
+        podajY = new JTextArea("Podaj Y");
+        podajRabbitsNumber = new JTextArea("Podaj ilość zajęcy");
         start = new JButton("Start");
+        stop = new JButton("Stop");
 
         add(giveK);
         add(giveRabbitsNumber);
@@ -58,29 +60,26 @@ public class Wilk extends JFrame implements ActionListener {
         add(podajX);
         add(podajY);
         add(start);
+        add(stop);
 
-        podajX.setText("Podaj X");
         podajX.setBackground(getBackground());
         podajX.setBounds(610,10, 150,19);
         podajX.setEditable(false);
 
         giveX.setBounds(610,30,100,19);
 
-        podajY.setText("Podaj Y");
         podajY.setBounds(610, 50, 150,19);
         podajY.setBackground(getBackground());
         podajY.setEditable(false);
 
         giveY.setBounds(610,70,100,19);
 
-        podajK.setText("Podaj K");
         podajK.setBackground(getBackground());
         podajK.setEditable(false);
         podajK.setBounds(610, 90, 150, 19);
 
         giveK.setBounds(610,110,100,19);
 
-        podajRabbitsNumber.setText("Podaj ilość zajęcy");
         podajRabbitsNumber.setBackground(getBackground());
         podajRabbitsNumber.setEditable(false);
         podajRabbitsNumber.setBounds(610, 130, 150, 19);
@@ -88,16 +87,16 @@ public class Wilk extends JFrame implements ActionListener {
         giveRabbitsNumber.setBounds(610,150,100,19);
 
         start.setBounds(610,180,100,24);
+        start.addActionListener(this);
 
-        {  //dodanie planszy
-            Plansza plansza = new Plansza(30, 30, 5);
-            add(plansza);
-            plansza.setBounds(0, 0, 600, 600);
-        }
+        stop.setBounds(610,210,100,24);
+        stop.addActionListener(this);
 
+
+       // Plansza plansza = new Plansza();
     }
 
-    public boolean validateData(String getx,String gety,String getRabbitsNumber, String getk){
+    public boolean validateData(String getx, String gety, String getRabbitsNumber, String getk){
 
         try{
             xSize=Integer.parseInt(getx);
@@ -119,23 +118,53 @@ public class Wilk extends JFrame implements ActionListener {
             return false;
         }
 
+        if(xSize>25||ySize>25){
+            JOptionPane.showMessageDialog( null,"Podaj x,y <25","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+
         try{
             k=Double.parseDouble(getk);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k","Błąd",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k [50,500]","Błąd",JOptionPane.WARNING_MESSAGE);
             return false;
         }
+
+        if(k<50||k>500){
+            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k [50,500]","Błąd",JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        Plansza plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
+        add(plansza);
+        plansza.setBounds(0, 0, 600, 600);
         return true;
+
+
     }
+    void newPlansza(){
 
-
+    }
+    void removeObject(Object object){
+        object = null;
+    }
 
 
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==start) {
+            validateData(giveX.getText(), giveY.getText(), giveRabbitsNumber.getText(), giveK.getText());
+            stop.setVisible(true);
+            start.setEnabled(false);
 
+        }
+        else if(e.getSource()==stop){
+            stop.setVisible(false);
+            start.setEnabled(true);
+            removeObject();
+        }
     }
-
 }

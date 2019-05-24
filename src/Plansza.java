@@ -7,7 +7,11 @@ public class Plansza extends JPanel{
     Color rabbitColor = new Color(1, 250,1);
     Color wolfColor = new Color(250, 1, 1);
     Color backgroundColor = new Color( 1);
+    public Plansza(){
+        setPreferredSize(new Dimension(600, 600));
+        setLayout(null);
 
+    }
     public Plansza(int xSize, int ySize, int startingNumberOfRabbits){
         setPreferredSize(new Dimension(600, 600));
         setLayout(null);
