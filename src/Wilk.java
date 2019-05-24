@@ -15,7 +15,7 @@ public class Wilk extends JFrame implements ActionListener {
     private double k;
     private Wolf wolf;
     private Plansza plansza;
-    private ArrayList<Rabbit> zajacList;
+    private ArrayList<Rabbit> rabbitsList;
 
     private JTextField giveK;
     private JTextField giveX;
@@ -39,7 +39,7 @@ public class Wilk extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         randomGenerator = new Random();
-        zajacList = new ArrayList<Rabbit>();
+        rabbitsList = new ArrayList<Rabbit>();
         wolf = new Wolf();
 
         giveK = new JTextField("105");
@@ -182,7 +182,7 @@ public class Wilk extends JFrame implements ActionListener {
         }
     }
 
-//dopisz!
+
     public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch (furthest) field should jump rabbit
         double maxValue=0;
         int counter=0;
@@ -256,6 +256,155 @@ public class Wilk extends JFrame implements ActionListener {
         }
     }
 
+    private void moveRabbit(Rabbit r){
+        int x=r.getxCoord();
+        int y=r.getyCoord();
+        int direciton = fieldToJump(r.getxCoord(),r.getyCoord());
+
+        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.defaultColor);
+        switch(direciton){
+            case 0:
+                break;
+            case 1:
+                r.setxCoord(x-1);
+                r.setyCoord(y-1);
+                break;
+            case 2:
+                r.setxCoord(x);
+                r.setyCoord(y-1);
+                break;
+            case 3:
+                r.setxCoord(x+1);
+                r.setyCoord(y-1);
+                break;
+            case 4:
+                r.setxCoord(x+1);
+                r.setyCoord(y);
+                break;
+            case 5:
+                r.setxCoord(x+1);
+                r.setyCoord(y+1);
+                break;
+            case 6:
+                r.setxCoord(x);
+                r.setyCoord(y+1);
+                break;
+            case 7:
+                r.setxCoord(x-1);
+                r.setyCoord(y+1);
+                break;
+            case 8:
+                r.setxCoord(x-1);
+                r.setyCoord(y);
+                break;
+            default:
+                break;
+        }
+        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.rabbitColor);
+    }
+
+    private void moveWolf(){
+        int x=wolf.getxCoord();
+        int y=wolf.getyCoord();
+        int xVector=0;
+        int yVector=0;
+        int closetRabbitIndex=0;
+        ArrayList<Double> distancesToRabbits = new ArrayList<Double>();
+        for(int i=0;i<rabbitsList.size();i++){
+            double temp=distanceToWolf(rabbitsList.get(i).getxCoord(),rabbitsList.get(i).getyCoord());
+           distancesToRabbits.add(temp);
+           if(temp<=distancesToRabbits.get(closetRabbitIndex)){
+               closetRabbitIndex=i;
+           }
+        }
+        //oblicz wektor, probuj zmniejszyc albo nie powiekszyc, albo stoj
+        xVector=rabbitsList.get(closetRabbitIndex).getxCoord()-x;
+        yVector=rabbitsList.get(closetRabbitIndex).getyCoord()-y;
+        plansza.buttonsArray[x][y].setBackground(plansza.defaultColor);
+        if(xVector!=0&&yVector!=0){
+            switch(quaterOfCoord(xVector,yVector)){
+                case 1:
+                    x=x+1;
+                    y=y+1;
+                    break;
+                case 2:
+                    x=x+1;
+                    y=y-1;
+                    break;
+                case 3:
+                    x=x-1;
+                    y=y-1;
+                    break;
+                case 4:
+                    x=x-1;
+                    y=y+1;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if(xVector==0){
+            if(yVector<0){
+                y=y-1;
+            }
+            else{
+                y=y+1;
+            }
+        }
+        else if(yVector==1){
+            if(xVector<0){
+                x=x-1;
+            }
+            else{
+                x=x+1;
+            }
+        }
+        wolf.setxCoord(x);
+        wolf.setyCoord(y);
+
+        if(ifThereWasRabbit(x,y)>=0){
+            System.out.println("Zabiłem zająca");
+            defeatZając(ifThereWasRabbit());
+
+
+        }
+        //czy tam nie bylo zajaca?
+
+        plansza.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(plansza.wolfColor);
+    }
+
+    private int quaterOfCoord(int x, int y){
+        if(x*y>0&&x+y>0){
+            return 1;
+        }
+        else if(x*y>0&&x+y<0){
+            return 3;
+        }
+        else if(x<0){
+            return 4;
+        }
+        else if(y<0){
+            return 2;
+        }
+        else{
+            System.out.println("coś poszło nie tego, ćwiartka sie nie zgadza i w ogóle");
+            return 69;
+        }
+    }
+
+    private int ifThereWasRabbit(int x, int y){
+        for(int i=0;i<rabbitsList.size();i++){
+            if(rabbitsList.get(i).getxCoord()==x&&rabbitsList.get(i).getyCoord()==y){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void defeatZając(int i){
+        rabbitsList.remove(i);
+        //zabicie wątku itd itd itd itd
+    }  //do dopisania!
 
 
     @Override
