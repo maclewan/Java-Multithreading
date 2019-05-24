@@ -14,6 +14,7 @@ public class Wilk extends JFrame implements ActionListener {
     private int ySize=0;
     private double k;
     private Wolf wolf;
+    private Plansza plansza;
     private ArrayList<Rabbit> zajacList;
 
     private JTextField giveK;
@@ -92,79 +93,140 @@ public class Wilk extends JFrame implements ActionListener {
         stop.setBounds(610,210,100,24);
         stop.addActionListener(this);
 
-
-       // Plansza plansza = new Plansza();
     }
 
-    public boolean validateData(String getx, String gety, String getRabbitsNumber, String getk){
+    public boolean validateData(String getx, String gety, String getRabbitsNumber, String getk) {
 
-        try{
-            xSize=Integer.parseInt(getx);
-            ySize=Integer.parseInt(gety);
+        try {
+            xSize = Integer.parseInt(getx);
+            ySize = Integer.parseInt(gety);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( null,"Podaj wartości całkowite dla x i y","Błąd",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Podaj wartości całkowite dla x i y", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        try{
-            startingNumberOfRabbits=Integer.parseInt(getRabbitsNumber);
+        try {
+            startingNumberOfRabbits = Integer.parseInt(getRabbitsNumber);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( null,"Podaj całkowitą liczbę zajęcy","Błąd",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Podaj całkowitą liczbę zajęcy", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if(startingNumberOfRabbits>=xSize*ySize){
-            JOptionPane.showMessageDialog( null,"Za dużo zajęcy!","Błąd",JOptionPane.WARNING_MESSAGE);
+        if (startingNumberOfRabbits >= xSize * ySize) {
+            JOptionPane.showMessageDialog(null, "Za dużo zajęcy!", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if(xSize>25||ySize>25){
-            JOptionPane.showMessageDialog( null,"Podaj x,y <25","Błąd",JOptionPane.WARNING_MESSAGE);
+        if (xSize > 25 || ySize > 25) {
+            JOptionPane.showMessageDialog(null, "Podaj x,y <25", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
 
-        try{
-            k=Double.parseDouble(getk);
+        try {
+            k = Double.parseDouble(getk);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k [50,500]","Błąd",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if(k<50||k>500){
-            JOptionPane.showMessageDialog( null,"Podaj wartość zmienneprzecinkową dla k [50,500]","Błąd",JOptionPane.WARNING_MESSAGE);
+        if (k < 50 || k > 500) {
+            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        Plansza plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
-        add(plansza);
-        plansza.setBounds(0, 0, 600, 600);
-        return true;
-
-
+        {
+            try {
+                remove(plansza);
+            }
+            catch (Exception e){}
+            plansza = null;
+            plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
+            add(plansza);
+            plansza.setBounds(0, 0, 600, 600);
+            repaint();
+            return true;
+        }  //tworzenie planszy
     }
-    void newPlansza(){
 
+    public double distanceToWolf(int rabbitX, int rabbitY){
+        return Math.sqrt(Math.pow(wolf.getxCoord()-rabbitX,2)+Math.pow(wolf.getyCoord()-rabbitY,2));
     }
-    void removeObject(Object object){
-        object = null;
+    public boolean inRangeOfPlansza(int xCoord, int yCoord){
+        if(xCoord>=0&&xCoord<xSize-1&&yCoord>=0&&yCoord<ySize){
+            return true;
+        }
+        return false;
     }
 
+//dopisz!
+    public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch field should jump rabbit
+        int optimalFieldNumber=0;
+        double optimalFieldDistance=xSize*ySize;
+        double tempFieldDistance=0;
+        double[][] arrayOfDistances=new double[8][2];
+        for(int i=0; i<8;i++){
+            switch(i){
+                case 1:
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY-1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY-1);
+                    }
+                case 2:
+                    if(inRangeOfPlansza(rabbitX,rabbitY-1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY-1);
+                    }
+                case 3:
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY-1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY-1);
+                    }
+                case 4:
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY);
+                    }
+                case 5:
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY+1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY+1);
+                    }
+                case 6:
+                    if(inRangeOfPlansza(rabbitX,rabbitY+1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY+1);
+                    }
+                case 7:
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY+1)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY+1);
+                    }
+                case 8:
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY)){
+                        arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY);
+                    }
+
+                default:
+
+            }
+
+
+
+        }
+        return 0; //temp
+    }
 
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==start) {
-            validateData(giveX.getText(), giveY.getText(), giveRabbitsNumber.getText(), giveK.getText());
-            stop.setVisible(true);
-            start.setEnabled(false);
+            if(validateData(giveX.getText(), giveY.getText(), giveRabbitsNumber.getText(), giveK.getText()))
+            {
+                stop.setVisible(true);
+                start.setEnabled(false);
+                //rozpoczęcie wątków itd itd itd
+            }
 
         }
         else if(e.getSource()==stop){
             stop.setVisible(false);
             start.setEnabled(true);
-            removeObject();
         }
     }
+
 }
