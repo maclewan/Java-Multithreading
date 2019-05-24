@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.Random;
 import java.util.ArrayList;
 
+import static java.lang.Integer.max;
 import static java.lang.Integer.parseInt;
 
 public class Wilk extends JFrame implements ActionListener {
@@ -29,6 +29,7 @@ public class Wilk extends JFrame implements ActionListener {
 
     private JButton start;
     private JButton stop;
+    private Random randomGenerator;
 
     public Wilk(){
         super("Symulacja");
@@ -37,6 +38,7 @@ public class Wilk extends JFrame implements ActionListener {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        randomGenerator = new Random();
         zajacList = new ArrayList<Rabbit>();
         wolf = new Wolf();
 
@@ -181,10 +183,9 @@ public class Wilk extends JFrame implements ActionListener {
     }
 
 //dopisz!
-    public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch field should jump rabbit
-        int optimalFieldNumber=0;
-        double optimalFieldDistance=xSize*ySize;
-        double tempFieldDistance=0;
+    public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch (furthest) field should jump rabbit
+        double maxValue=0;
+        int counter=0;
         double[][] arrayOfDistances=new double[8][2];
         for(int i=0; i<8;i++){
             arrayOfDistances[i][1]=0;
@@ -235,17 +236,24 @@ public class Wilk extends JFrame implements ActionListener {
             }
         }
         sortArray(arrayOfDistances);
-        if(arrayOfDistances[0][1]==0){
-            return 0; //dont move
+        if(arrayOfDistances[7][1]==0){
+            return 0;
+        } //dont move, if there is no possible field to jump on
+
+        //sprawdzenie ile jest takich samych maxów
+        maxValue=arrayOfDistances[7][1];
+        for(int i=6; i>=0; i--){
+            if(arrayOfDistances[i][1]==maxValue){
+                counter++;
+            }
         }
-
-        //sprawdzenie ile jest takich samych i podział zgodnie z rozkładem losowym
-
-
-
-
-
-        return 0; //temp
+        //podział zgodnie z rozkładem losowym
+        if(counter==1){
+            return (int)arrayOfDistances[7][0];
+        }
+        else{
+            return (int)arrayOfDistances[7-randomGenerator.nextInt(counter)][0];
+        }
     }
 
 
