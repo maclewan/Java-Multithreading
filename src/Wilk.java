@@ -158,6 +158,27 @@ public class Wilk extends JFrame implements ActionListener {
         }
         return false;
     }
+    public void sortArray(double[][] arr){
+        int n =8;
+        double temp = 0;
+        double tempIndex=0;
+
+        for(int i = 0; i < n; i++) {
+            for(int j=1; j < (n-i); j++) {
+                if(arr[j-1][1] > arr[j][1]) {
+
+                    temp = arr[j-1][1];
+                    tempIndex = arr[j-1][0];
+
+                    arr[j-1][1] = arr[j][1];
+                    arr[j-1][0] = arr[j][0];
+
+                    arr[j][1] = temp;
+                    arr[j][0] = tempIndex;
+                }
+            }
+        }
+    }
 
 //dopisz!
     public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch field should jump rabbit
@@ -166,47 +187,64 @@ public class Wilk extends JFrame implements ActionListener {
         double tempFieldDistance=0;
         double[][] arrayOfDistances=new double[8][2];
         for(int i=0; i<8;i++){
+            arrayOfDistances[i][1]=0;
+            arrayOfDistances[i][0]=i+1;
             switch(i){
                 case 1:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY-1)&&plansza.isFieldEmpty(rabbitX-1,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY-1);
                     }
+                    break;
                 case 2:
-                    if(inRangeOfPlansza(rabbitX,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX,rabbitY-1)&&plansza.isFieldEmpty(rabbitX,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY-1);
                     }
+                    break;
                 case 3:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY-1)&&plansza.isFieldEmpty(rabbitX+1,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY-1);
                     }
+                    break;
                 case 4:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY)&&plansza.isFieldEmpty(rabbitX+1,rabbitY)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY);
                     }
+                    break;
                 case 5:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY+1)&&plansza.isFieldEmpty(rabbitX+1,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY+1);
                     }
+                    break;
                 case 6:
-                    if(inRangeOfPlansza(rabbitX,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX,rabbitY+1)&&plansza.isFieldEmpty(rabbitX,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY+1);
                     }
+                    break;
                 case 7:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY+1)&&plansza.isFieldEmpty(rabbitX-1,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY+1);
                     }
+                    break;
                 case 8:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY)&&plansza.isFieldEmpty(rabbitX-1,rabbitY)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY);
                     }
-
+                    break;
                 default:
 
             }
-
-
-
         }
+        sortArray(arrayOfDistances);
+        if(arrayOfDistances[0][1]==0){
+            return 0; //dont move
+        }
+
+        //sprawdzenie ile jest takich samych i podział zgodnie z rozkładem losowym
+
+
+
+
+
         return 0; //temp
     }
 
