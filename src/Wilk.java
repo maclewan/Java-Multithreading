@@ -13,7 +13,9 @@ public class Wilk extends JFrame implements ActionListener {
     private int startingNumberOfRabbits=0;
     private int xSize=0;
     private int ySize=0;
+    private int killedNumberOfRabbits;
     private double k;
+
     private Wolf wolf;
     private Plansza plansza;
     private ArrayList<Rabbit> rabbitsList;
@@ -27,6 +29,8 @@ public class Wilk extends JFrame implements ActionListener {
     private JTextArea podajX;
     private JTextArea podajY;
     private JTextArea podajRabbitsNumber;
+    private JTextArea remainedRabbits;
+    private JTextArea killedRabits;
 
     private JButton start;
     private JButton stop;
@@ -43,6 +47,8 @@ public class Wilk extends JFrame implements ActionListener {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        killedNumberOfRabbits=0;
+
         randomGenerator = new Random();
         rabbitsList = new ArrayList<Rabbit>();
         wolf = new Wolf();
@@ -55,6 +61,8 @@ public class Wilk extends JFrame implements ActionListener {
         podajX = new JTextArea("Podaj X");
         podajY = new JTextArea("Podaj Y");
         podajRabbitsNumber = new JTextArea("Podaj ilość zajęcy");
+        remainedRabbits = new JTextArea("Pozostało zajęcy: 0");
+        killedRabits = new JTextArea("Zabito zajęcy: 0");
         start = new JButton("Start");
         stop = new JButton("Stop");
 
@@ -78,6 +86,8 @@ public class Wilk extends JFrame implements ActionListener {
         add(podajRabbitsNumber);
         add(podajX);
         add(podajY);
+        add(remainedRabbits);
+        add(killedRabits);
         add(start);
         add(stop);
 
@@ -104,6 +114,14 @@ public class Wilk extends JFrame implements ActionListener {
         podajRabbitsNumber.setBounds(610, 130, 150, 19);
 
         giveRabbitsNumber.setBounds(610,150,100,19);
+
+        remainedRabbits.setBackground(getBackground());
+        remainedRabbits.setBounds(10,605,200,19);
+        remainedRabbits.setEditable(false);
+
+        killedRabits.setBackground(getBackground());
+        killedRabits.setBounds(10,625, 200,19);
+        killedRabits.setEditable(false);
 
         start.setBounds(610,180,100,24);
         start.addActionListener(this);
@@ -161,8 +179,8 @@ public class Wilk extends JFrame implements ActionListener {
             plansza = null;
             plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
             add(plansza);
-            wolf =null;
             plansza.setBounds(0, 0, 600, 600);
+            remainedRabbits.setText("Pozostało zajęcy: "+startingNumberOfRabbits);
             repaint();
             return true;
         }  //tworzenie planszy
@@ -322,7 +340,10 @@ public class Wilk extends JFrame implements ActionListener {
     }
 
     private void moveWolf(){
-
+        if(rabbitsList.size()==0){
+            endSimulation();
+            return;
+        }
         int x=wolf.getxCoord();
         int y=wolf.getyCoord();
         int xVector=0;
@@ -421,9 +442,10 @@ public class Wilk extends JFrame implements ActionListener {
     } //returns index of Rabbit if it was there
 
     private void defeatZając(int i){
+        killedNumberOfRabbits++;
         rabbitsList.remove(i);
-        if(rabbitsList.size()==0);
-        endSimulation();
+        remainedRabbits.setText("Pozostało zajęcy: "+(startingNumberOfRabbits-killedNumberOfRabbits));
+        killedRabits.setText("Pozostało zajęcy: "+(killedNumberOfRabbits));
         //zabicie wątku itd itd itd itd
     }  //do dopisania!
 
@@ -452,6 +474,7 @@ public class Wilk extends JFrame implements ActionListener {
             newX=randomGenerator.nextInt(xSize);
             newY=randomGenerator.nextInt(ySize);
             if(plansza.buttonsArray[newX][newY].getBackground()==plansza.defaultColor) {
+                wolf =null;
                 wolf = new Wolf();
                 wolf.setxCoord(newX);
                 wolf.setyCoord(newY);
@@ -485,7 +508,7 @@ public class Wilk extends JFrame implements ActionListener {
             //for(int f=0;f<100; f++) {
                 int random = randomGenerator.nextInt(rabbitsList.size());
                 moveRabbit(rabbitsList.get(random));
-                
+
             //}
         }
     }
