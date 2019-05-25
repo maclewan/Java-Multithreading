@@ -427,8 +427,7 @@ public class Wilk extends JFrame implements ActionListener {
             return 2;
         }
         else{
-            System.out.println("coś poszło nie tego, ćwiartka sie nie zgadza i w ogóle");
-            return 69;
+            throw new RuntimeException("Coś poszło nie tak!");
         }
     }  //returns quater od coord system where this point was
 
