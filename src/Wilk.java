@@ -174,6 +174,7 @@ public class Wilk extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,250]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
+        k=10*k;
 
         {
             try {
@@ -446,6 +447,9 @@ public class Wilk extends JFrame implements ActionListener {
     private void defeatZając(int i){
         killedNumberOfRabbits++;
         threadRabbitList.get(i).interrupt();
+        threadRabbitList.get(i).stopThr();
+        rabbitsList.get(i).setyCoord(-100-i);
+        rabbitsList.get(i).setxCoord(-100-i);
         remainedRabbits.setText("Pozostało zajęcy: "+(startingNumberOfRabbits-killedNumberOfRabbits));
         killedRabits.setText("Zabito zajęcy: "+(killedNumberOfRabbits));
     }
@@ -455,6 +459,13 @@ public class Wilk extends JFrame implements ActionListener {
         stop.setVisible(false);
         start.setEnabled(true);
         threadWolf.interrupt();
+        threadWolf.stopThr();
+        threadWolf =null;
+        for(int i=0;i<threadRabbitList.size();i++){
+            threadRabbitList.get(i).interrupt();
+            threadRabbitList.get(i).stopThr();
+        }
+        threadRabbitList.clear();
         threadRabbitList=null;
     }
 
@@ -469,7 +480,6 @@ public class Wilk extends JFrame implements ActionListener {
                     rabbitsList.add(new Rabbit());
                     rabbitsList.get(rabbitsList.size()-1).setxCoord(newX);
                     rabbitsList.get(rabbitsList.size()-1).setyCoord(newY);
-                    rabbitsList.get(rabbitsList.size()-1).setkParameter(k);
                     plansza.buttonsArray[newX][newY].setBackground(plansza.rabbitColor);
                     //tworzenie wątków:
                     threadRabbitList.add(new ThreadRabbit());
@@ -486,7 +496,6 @@ public class Wilk extends JFrame implements ActionListener {
                 wolf = new Wolf();
                 wolf.setxCoord(newX);
                 wolf.setyCoord(newY);
-                wolf.setkParameter(k);
                 plansza.buttonsArray[newX][newY].setBackground(plansza.wolfColor);
                 threadWolf = new ThreadWolf();
                 break;
@@ -505,31 +514,36 @@ public class Wilk extends JFrame implements ActionListener {
                 randomSpacingOfAnimals();
                 killedNumberOfRabbits=0;
                 killedRabits.setText("Zabito zajęcy: "+(killedNumberOfRabbits));
+                threadWolf.start();
                 for(int i=0;i<threadRabbitList.size();i++){
                     threadRabbitList.get(i).start();
                 }
-                threadWolf.start();
+
             }
 
         }
         else if(e.getSource()==stop){
             stop.setVisible(false);
             start.setEnabled(true);
+            endSimulation();
         }
 
     }
 
     class ThreadRabbit extends Thread {
         int rabbitPointer;
+        boolean inLoop=true;
         @Override
         public void run(){
-            while(true){
+            while(inLoop){
+                System.out.println("Lece: "+rabbitPointer);
                 moveRabbit(rabbitsList.get(rabbitPointer));
                 try {
                     Thread.sleep((long)(k*(randomGenerator.nextDouble()+0.5)));
                 }
                 catch(InterruptedException interruptedEx){
-                    System.out.println("Interrupted Exception!");
+                    System.out.println("Interrupted Exception! rabbit: "+rabbitPointer);
+
                 }
 
             }
@@ -538,19 +552,26 @@ public class Wilk extends JFrame implements ActionListener {
         public void setRabbitPointer(int rabbitPointer) {
             this.rabbitPointer = rabbitPointer;
         }
+
+        public void stopThr() {
+            inLoop =false;
+            System.out.println("Stopped: "+ rabbitPointer);
+        }
     }
 
     class ThreadWolf extends Thread{
+        boolean inLoop=true;
         @Override
         public void run(){
-            while(true){
+            while(inLoop){
                 if(justKilledRabbit){
+                    System.out.println("lece: wilk");
                     try {
                         justKilledRabbit=false;
                         Thread.sleep((long)(5*k*(randomGenerator.nextDouble()+0.5)));
                     }
                     catch(InterruptedException interruptedEx){
-                        System.out.println("Interrupted Exception!");
+                        System.out.println("Interrupted Exception! wolf");
                     }
                 }
 
@@ -560,6 +581,10 @@ public class Wilk extends JFrame implements ActionListener {
                 moveWolf();
 
             }
+        }
+        public void stopThr() {
+            inLoop =false;
+            System.out.println("Stopped: wilk");
         }
     }
 

@@ -1,6 +1,5 @@
 public class Animal {
     private int xCoord, yCoord;
-    private double kParameter;
 
     public Animal(){
         this.xCoord=0;
@@ -25,7 +24,4 @@ public class Animal {
         this.yCoord = yCoord;
     }
 
-    public void setkParameter(double k){
-        this.kParameter=kParameter;
-    }
 }
