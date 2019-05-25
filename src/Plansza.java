@@ -11,8 +11,8 @@ public class Plansza extends JPanel {
         setPreferredSize(new Dimension(600, 600));
         setLayout(null);
 
-        int buttonWidth = 600 / xSize;
-        int buttonHeiht = 600 / ySize;
+        int buttonWidth = 1000 / xSize;
+        int buttonHeiht = 1000 / ySize;
 
 
         buttonsArray = new JButton[xSize][ySize];
