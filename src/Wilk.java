@@ -191,7 +191,7 @@ public class Wilk extends JFrame implements ActionListener {
     }
     public boolean inRangeOfPlansza(int xCoord, int yCoord){
 
-        if(xCoord>=0&&xCoord<xSize-1&&yCoord>=0&&yCoord<ySize-1){
+        if(xCoord>=0&&xCoord<xSize&&yCoord>=0&&yCoord<ySize){
             return true;
         }
         return false;
@@ -445,7 +445,7 @@ public class Wilk extends JFrame implements ActionListener {
         killedNumberOfRabbits++;
         rabbitsList.remove(i);
         remainedRabbits.setText("Pozostało zajęcy: "+(startingNumberOfRabbits-killedNumberOfRabbits));
-        killedRabits.setText("Pozostało zajęcy: "+(killedNumberOfRabbits));
+        killedRabits.setText("Zabito zajęcy: "+(killedNumberOfRabbits));
         //zabicie wątku itd itd itd itd
     }  //do dopisania!
 
@@ -493,6 +493,8 @@ public class Wilk extends JFrame implements ActionListener {
                 stop.setVisible(true);
                 start.setEnabled(false);
                 randomSpacingOfAnimals();
+                killedNumberOfRabbits=0;
+                killedRabits.setText("Zabito zajęcy: "+(killedNumberOfRabbits));
                 //rozpoczęcie wątków itd itd itd
             }
 
@@ -505,11 +507,11 @@ public class Wilk extends JFrame implements ActionListener {
             moveWolf();
         }
         else if(e.getSource()==rabbitTest){
-            //for(int f=0;f<100; f++) {
+            for(int f=0;f<100; f++) {
                 int random = randomGenerator.nextInt(rabbitsList.size());
                 moveRabbit(rabbitsList.get(random));
 
-            //}
+            }
         }
     }
 
