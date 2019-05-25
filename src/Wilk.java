@@ -23,6 +23,7 @@ public class Wilk extends JFrame implements ActionListener {
     private ArrayList<ThreadRabbit> threadRabbitList;
     private ThreadWolf threadWolf;
 
+
     private JTextField giveK;
     private JTextField giveX;
     private JTextField giveY;
@@ -54,7 +55,6 @@ public class Wilk extends JFrame implements ActionListener {
 
         rabbitsList = new ArrayList<Rabbit>();
         wolf = new Wolf();
-        threadRabbitList = new ArrayList<ThreadRabbit>();
 
 
         giveK = new JTextField("105");
@@ -472,6 +472,7 @@ public class Wilk extends JFrame implements ActionListener {
     private void randomSpacingOfAnimals(){
         int newX;
         int newY;
+        threadRabbitList = new ArrayList<>();
         for(int i=0; i<startingNumberOfRabbits; i++){
             while(true) {
                 newX=randomGenerator.nextInt(xSize);
@@ -482,6 +483,7 @@ public class Wilk extends JFrame implements ActionListener {
                     rabbitsList.get(rabbitsList.size()-1).setyCoord(newY);
                     plansza.buttonsArray[newX][newY].setBackground(plansza.rabbitColor);
                     //tworzenie wątków:
+
                     threadRabbitList.add(new ThreadRabbit());
                     threadRabbitList.get(threadRabbitList.size()-1).setRabbitPointer(i);
                     break;
@@ -579,6 +581,11 @@ public class Wilk extends JFrame implements ActionListener {
                     endSimulation();
                 }
                 moveWolf();
+                try {
+                    Thread.sleep((long)(k*(randomGenerator.nextDouble()+0.5)));
+                }
+                catch(InterruptedException interruptedEx){
+                }
 
             }
         }
