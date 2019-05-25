@@ -168,12 +168,12 @@ public class Wilk extends JFrame implements ActionListener {
         try {
             k = Double.parseDouble(getk);
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [60,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
-        if (k < 49 || k > 501) {
-            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
+        if (k < 59 || k > 501) {
+            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [60,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
