@@ -15,6 +15,7 @@ public class Wilk extends JFrame implements ActionListener {
     private int ySize=0;
     private int killedNumberOfRabbits;
     private double k;
+    private boolean justKilledRabbit=false;
 
     private Wolf wolf;
     private Plansza plansza;
@@ -38,7 +39,7 @@ public class Wilk extends JFrame implements ActionListener {
     private JButton wolfTest;
     private JButton rabbitTest;
     //temp
-    private Random randomGenerator;
+    protected Random randomGenerator = new Random();
 
     public Wilk(){
         super("Symulacja");
@@ -49,7 +50,6 @@ public class Wilk extends JFrame implements ActionListener {
 
         killedNumberOfRabbits=0;
 
-        randomGenerator = new Random();
         rabbitsList = new ArrayList<Rabbit>();
         wolf = new Wolf();
 
@@ -153,8 +153,8 @@ public class Wilk extends JFrame implements ActionListener {
             return false;
         }
 
-        if (xSize > 25 || ySize > 25) {
-            JOptionPane.showMessageDialog(null, "Podaj x,y <25", "Błąd", JOptionPane.WARNING_MESSAGE);
+        if (xSize > 31 || ySize > 31) {
+            JOptionPane.showMessageDialog(null, "Podaj x,y <31", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -166,8 +166,8 @@ public class Wilk extends JFrame implements ActionListener {
             return false;
         }
 
-        if (k < 50 || k > 500) {
-            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,500]", "Błąd", JOptionPane.WARNING_MESSAGE);
+        if (k < 50 || k > 250) {
+            JOptionPane.showMessageDialog(null, "Podaj wartość zmienneprzecinkową dla k [50,250]", "Błąd", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -189,6 +189,7 @@ public class Wilk extends JFrame implements ActionListener {
     public double distanceToWolf(int rabbitX, int rabbitY){
         return Math.sqrt(Math.pow(wolf.getxCoord()-rabbitX,2)+Math.pow(wolf.getyCoord()-rabbitY,2));
     }
+
     public boolean inRangeOfPlansza(int xCoord, int yCoord){
 
         if(xCoord>=0&&xCoord<xSize&&yCoord>=0&&yCoord<ySize){
@@ -196,6 +197,7 @@ public class Wilk extends JFrame implements ActionListener {
         }
         return false;
     }
+
     public void sortArray(double[][] arr){
         int n =8;
         double temp = 0;
@@ -218,8 +220,7 @@ public class Wilk extends JFrame implements ActionListener {
         }
     }
 
-
-    public int fieldToJump(int rabbitX, int rabbitY){       //returns on witch (furthest) field should jump rabbit
+    public synchronized int fieldToJump(int rabbitX, int rabbitY){       //returns on witch (furthest) field should jump rabbit
         double maxValue=0;
         int counter=1;
         double[][] arrayOfDistances=new double[8][2];
@@ -292,7 +293,7 @@ public class Wilk extends JFrame implements ActionListener {
         }
     }
 
-    private void moveRabbit(Rabbit r){
+    private synchronized void moveRabbit(Rabbit r){
         int x=r.getxCoord();
         int y=r.getyCoord();
         int direciton = fieldToJump(r.getxCoord(),r.getyCoord());
@@ -339,77 +340,75 @@ public class Wilk extends JFrame implements ActionListener {
         plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.rabbitColor);
     }
 
-    private void moveWolf(){
-        if(rabbitsList.size()==0){
+    private synchronized void moveWolf() {
+        if (rabbitsList.size() == 0) {
             endSimulation();
             return;
         }
-        int x=wolf.getxCoord();
-        int y=wolf.getyCoord();
-        int xVector=0;
-        int yVector=0;
-        int closetRabbitIndex=0;
+        int x = wolf.getxCoord();
+        int y = wolf.getyCoord();
+        int xVector = 0;
+        int yVector = 0;
+        int closetRabbitIndex = 0;
 
         ArrayList<Double> distancesToRabbits = new ArrayList<Double>();
 
         //double hardTemp=distanceToWolf(rabbitsList.get(0).getxCoord(),rabbitsList.get(0).getyCoord());
-        for(int i=0;i<rabbitsList.size();i++){
-            double temp=distanceToWolf(rabbitsList.get(i).getxCoord(),rabbitsList.get(i).getyCoord());
+        for (int i = 0; i < rabbitsList.size(); i++) {
+            double temp = distanceToWolf(rabbitsList.get(i).getxCoord(), rabbitsList.get(i).getyCoord());
             distancesToRabbits.add(temp);
-            if(temp<=distancesToRabbits.get(closetRabbitIndex)){
-                closetRabbitIndex=i;
-           }
+            if (temp <= distancesToRabbits.get(closetRabbitIndex)) {
+                closetRabbitIndex = i;
+            }
         }
         //oblicz wektor, probuj zmniejszyc albo nie powiekszyc, albo stoj
-        xVector=rabbitsList.get(closetRabbitIndex).getxCoord()-x;
-        yVector=rabbitsList.get(closetRabbitIndex).getyCoord()-y;
+        xVector = rabbitsList.get(closetRabbitIndex).getxCoord() - x;
+        yVector = rabbitsList.get(closetRabbitIndex).getyCoord() - y;
         plansza.buttonsArray[x][y].setBackground(plansza.defaultColor);
-        if(xVector!=0&&yVector!=0){
-            switch(quaterOfCoord(xVector,yVector)){
-                case 1:
-                    x=x+1;
-                    y=y+1;
-                    break;
-                case 2:
-                    x=x+1;
-                    y=y-1;
-                    break;
-                case 3:
-                    x=x-1;
-                    y=y-1;
-                    break;
-                case 4:
-                    x=x-1;
-                    y=y+1;
-                    break;
-                default:
-                    break;
+        {
+            if (xVector != 0 && yVector != 0) {
+                switch (quaterOfCoord(xVector, yVector)) {
+                    case 1:
+                        x = x + 1;
+                        y = y + 1;
+                        break;
+                    case 2:
+                        x = x + 1;
+                        y = y - 1;
+                        break;
+                    case 3:
+                        x = x - 1;
+                        y = y - 1;
+                        break;
+                    case 4:
+                        x = x - 1;
+                        y = y + 1;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (xVector == 0) {
+                if (yVector < 0) {
+                    y = y - 1;
+                } else {
+                    y = y + 1;
+                }
+            } else if (yVector == 0) {
+                if (xVector < 0) {
+                    x = x - 1;
+                } else {
+                    x = x + 1;
+                }
             }
-        }
-        else if(xVector==0){
-            if(yVector<0){
-                y=y-1;
-            }
-            else{
-                y=y+1;
-            }
-        }
-        else if(yVector==0){
-            if(xVector<0){
-                x=x-1;
-            }
-            else{
-                x=x+1;
-            }
-        }
+        }  //ruch wilka
+
         wolf.setxCoord(x);
         wolf.setyCoord(y);
         plansza.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(plansza.wolfColor);
 
         if(ifThereWasRabbit(x,y)>=0){
-            System.out.println("Zabiłem zająca");
             defeatZając(ifThereWasRabbit(x,y));
-            wolf.setPauseTime5();
+            justKilledRabbit=true;
         }
     }
 
@@ -442,11 +441,10 @@ public class Wilk extends JFrame implements ActionListener {
 
     private void defeatZając(int i){
         killedNumberOfRabbits++;
-        rabbitsList.remove(i);
+        //zakońc wątek i tego zająca
         remainedRabbits.setText("Pozostało zajęcy: "+(startingNumberOfRabbits-killedNumberOfRabbits));
         killedRabits.setText("Zabito zajęcy: "+(killedNumberOfRabbits));
-        //zabicie wątku itd itd itd itd
-    }  //do dopisania!
+    }
 
     private void endSimulation(){
         stop.setVisible(false);
@@ -464,6 +462,7 @@ public class Wilk extends JFrame implements ActionListener {
                     rabbitsList.add(new Rabbit());
                     rabbitsList.get(rabbitsList.size()-1).setxCoord(newX);
                     rabbitsList.get(rabbitsList.size()-1).setyCoord(newY);
+                    rabbitsList.get(rabbitsList.size()-1).setkParameter(k);
                     plansza.buttonsArray[newX][newY].setBackground(plansza.rabbitColor);
                     break;
                 }
@@ -477,12 +476,12 @@ public class Wilk extends JFrame implements ActionListener {
                 wolf = new Wolf();
                 wolf.setxCoord(newX);
                 wolf.setyCoord(newY);
+                wolf.setkParameter(k);
                 plansza.buttonsArray[newX][newY].setBackground(plansza.wolfColor);
                 break;
             }
         }
     }
-
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -502,16 +501,51 @@ public class Wilk extends JFrame implements ActionListener {
             stop.setVisible(false);
             start.setEnabled(true);
         }
-        else if(e.getSource()==wolfTest){
-            moveWolf();
-        }
-        else if(e.getSource()==rabbitTest){
-            for(int f=0;f<100; f++) {
-                int random = randomGenerator.nextInt(rabbitsList.size());
-                moveRabbit(rabbitsList.get(random));
 
+    }
+    class ThreadRabbit extends Thread {
+        int rabbitPointer;
+        @Override
+        public void run(){
+            while(true){
+                moveRabbit(rabbitsList.get(rabbitPointer));
+                try {
+                    Thread.sleep((long)(k*(randomGenerator.nextDouble()+0.5)));
+                }
+                catch(InterruptedException interruptedEx){
+                    System.out.println("Interrupted Exception!");
+                }
+
+            }
+        }
+
+        public void setRabbitPointer(int rabbitPointer) {
+            this.rabbitPointer = rabbitPointer;
+        }
+    }
+
+    class ThreadWolf extends Thread{
+        @Override
+        public void run(){
+            while(true){
+                if(startingNumberOfRabbits-killedNumberOfRabbits==0){
+                    endSimulation();
+                }
+                moveWolf();
+                if(justKilledRabbit){
+                    try {
+                        justKilledRabbit=false;
+                        Thread.sleep((long)(5*k*(randomGenerator.nextDouble()+0.5)));
+                    }
+                    catch(InterruptedException interruptedEx){
+                        System.out.println("Interrupted Exception!");
+                    }
+                }
             }
         }
     }
 
 }
+
+
+
