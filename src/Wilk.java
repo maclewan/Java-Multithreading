@@ -50,7 +50,7 @@ public class Wilk extends JFrame implements ActionListener {
     public Wilk(){
         super("Symulacja");
         setLayout(null);
-        setSize(1200,1100);
+        setSize(1000,900);
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,46 +93,46 @@ public class Wilk extends JFrame implements ActionListener {
         add(stop);
 
         podajX.setBackground(getBackground());
-        podajX.setBounds(1010,10, 150,19);
+        podajX.setBounds(810,10, 150,19);
         podajX.setEditable(false);
 
-        giveX.setBounds(1010,30,100,19);
+        giveX.setBounds(810,30,100,19);
 
-        podajY.setBounds(1010, 50, 150,19);
+        podajY.setBounds(810, 50, 150,19);
         podajY.setBackground(getBackground());
         podajY.setEditable(false);
 
-        giveY.setBounds(1010,70,100,19);
+        giveY.setBounds(810,70,100,19);
 
         podajK.setBackground(getBackground());
         podajK.setEditable(false);
-        podajK.setBounds(1010, 90, 250, 19);
+        podajK.setBounds(810, 90, 250, 19);
 
         giveK.setBounds(1010,110,100,19);
 
         podajRabbitsNumber.setBackground(getBackground());
         podajRabbitsNumber.setEditable(false);
-        podajRabbitsNumber.setBounds(1010, 130, 150, 19);
+        podajRabbitsNumber.setBounds(810, 130, 150, 19);
 
-        giveRabbitsNumber.setBounds(1010,150,100,19);
+        giveRabbitsNumber.setBounds(810,150,100,19);
 
         remainedRabbits.setBackground(getBackground());
-        remainedRabbits.setBounds(10,1005,200,19);
+        remainedRabbits.setBounds(10,805,200,19);
         remainedRabbits.setEditable(false);
 
         killedRabits.setBackground(getBackground());
-        killedRabits.setBounds(10,1025, 200,19);
+        killedRabits.setBounds(10,825, 200,19);
         killedRabits.setEditable(false);
 
         runningTime.setBackground(getBackground());
-        runningTime.setBounds(300,1005, 400,19);
+        runningTime.setBounds(300,805, 400,19);
         runningTime.setEditable(false);
         runningTime.setVisible(false);
 
-        start.setBounds(1010,180,100,24);
+        start.setBounds(810,180,100,24);
         start.addActionListener(this);
 
-        stop.setBounds(1010,210,100,24);
+        stop.setBounds(810,210,100,24);
         stop.addActionListener(this);
 
     }
@@ -186,7 +186,7 @@ public class Wilk extends JFrame implements ActionListener {
             plansza = null;
             plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
             add(plansza);
-            plansza.setBounds(0, 0, 1000, 1000);
+            plansza.setBounds(0, 0, 800, 800);
             remainedRabbits.setText("Pozostało zajęcy: "+startingNumberOfRabbits);
             repaint();
             return true;

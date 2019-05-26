@@ -8,11 +8,11 @@ public class Plansza extends JPanel {
     Color wolfColor = new Color(179, 179, 179);
 
     public Plansza(int xSize, int ySize, int startingNumberOfRabbits) {
-        setPreferredSize(new Dimension(600, 600));
+        setPreferredSize(new Dimension(800, 800));
         setLayout(null);
 
-        int buttonWidth = 1000 / xSize;
-        int buttonHeiht = 1000 / ySize;
+        int buttonWidth = 800 / xSize;
+        int buttonHeiht = 800 / ySize;
 
 
         buttonsArray = new JButton[xSize][ySize];
