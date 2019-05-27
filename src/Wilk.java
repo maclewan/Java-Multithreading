@@ -108,7 +108,7 @@ public class Wilk extends JFrame implements ActionListener {
         podajK.setEditable(false);
         podajK.setBounds(810, 90, 250, 19);
 
-        giveK.setBounds(1010,110,100,19);
+        giveK.setBounds(810,110,100,19);
 
         podajRabbitsNumber.setBackground(getBackground());
         podajRabbitsNumber.setEditable(false);
