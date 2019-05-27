@@ -305,46 +305,48 @@ public class Wilk extends JFrame implements ActionListener {
         int y=r.getyCoord();
         int direciton = fieldToJump(r.getxCoord(),r.getyCoord());
 
-        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.defaultColor);
-        switch(direciton){
-            case 0:
-                break;
-            case 1:
-                r.setxCoord(x-1);
-                r.setyCoord(y-1);
-                break;
-            case 2:
-                r.setxCoord(x);
-                r.setyCoord(y-1);
-                break;
-            case 3:
-                r.setxCoord(x+1);
-                r.setyCoord(y-1);
-                break;
-            case 4:
-                r.setxCoord(x+1);
-                r.setyCoord(y);
-                break;
-            case 5:
-                r.setxCoord(x+1);
-                r.setyCoord(y+1);
-                break;
-            case 6:
-                r.setxCoord(x);
-                r.setyCoord(y+1);
-                break;
-            case 7:
-                r.setxCoord(x-1);
-                r.setyCoord(y+1);
-                break;
-            case 8:
-                r.setxCoord(x-1);
-                r.setyCoord(y);
-                break;
-            default:
-                break;
+        if(!(x<0)) {
+            plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.defaultColor);
+            switch (direciton) {
+                case 0:
+                    break;
+                case 1:
+                    r.setxCoord(x - 1);
+                    r.setyCoord(y - 1);
+                    break;
+                case 2:
+                    r.setxCoord(x);
+                    r.setyCoord(y - 1);
+                    break;
+                case 3:
+                    r.setxCoord(x + 1);
+                    r.setyCoord(y - 1);
+                    break;
+                case 4:
+                    r.setxCoord(x + 1);
+                    r.setyCoord(y);
+                    break;
+                case 5:
+                    r.setxCoord(x + 1);
+                    r.setyCoord(y + 1);
+                    break;
+                case 6:
+                    r.setxCoord(x);
+                    r.setyCoord(y + 1);
+                    break;
+                case 7:
+                    r.setxCoord(x - 1);
+                    r.setyCoord(y + 1);
+                    break;
+                case 8:
+                    r.setxCoord(x - 1);
+                    r.setyCoord(y);
+                    break;
+                default:
+                    break;
+            }
+            plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.rabbitColor);
         }
-        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.rabbitColor);
     }
 
     private synchronized void moveWolf() {
@@ -449,7 +451,7 @@ public class Wilk extends JFrame implements ActionListener {
         return -1;
     } //returns index of Rabbit if it was there
 
-    private void defeatZając(int i){
+    private synchronized void defeatZając(int i){
         killedNumberOfRabbits++;
         threadRabbitList.get(i).interrupt();
         threadRabbitList.get(i).stopThr();
