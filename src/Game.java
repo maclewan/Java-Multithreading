@@ -562,6 +562,7 @@ public class Game extends JFrame implements ActionListener {
         }
     }
 
+
     class ThreadWolf extends Thread{
         boolean inLoop=true;
         @Override
