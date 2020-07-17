@@ -1,13 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Plansza extends JPanel {
+public class Board extends JPanel {
     JButton[][] buttonsArray;
     Color defaultColor = new Color(15, 150, 29);
     Color rabbitColor = new Color(88, 93, 73);
     Color wolfColor = new Color(179, 179, 179);
 
-    public Plansza(int xSize, int ySize, int startingNumberOfRabbits) {
+    public Board(int xSize, int ySize, int startingNumberOfRabbits) {
         setPreferredSize(new Dimension(800, 800));
         setLayout(null);
 

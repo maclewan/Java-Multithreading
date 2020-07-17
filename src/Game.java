@@ -3,12 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
-import static java.lang.Integer.max;
 import static java.lang.Integer.parseInt;
 
-public class Wilk extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener {
 
     private int startingNumberOfRabbits=0;
     private int xSize=0;
@@ -20,11 +18,10 @@ public class Wilk extends JFrame implements ActionListener {
     private boolean justKilledRabbit=false;
 
     private Wolf wolf;
-    private Plansza plansza;
+    private Board board;
     private ArrayList<Rabbit> rabbitsList;
     private ArrayList<ThreadRabbit> threadRabbitList;
     private ThreadWolf threadWolf;
-
 
     private JTextField giveK;
     private JTextField giveX;
@@ -41,13 +38,10 @@ public class Wilk extends JFrame implements ActionListener {
 
     private JButton start;
     private JButton stop;
-    //temp
-    private JButton wolfTest;
-    private JButton rabbitTest;
-    //temp
+
     protected Random randomGenerator = new Random();
 
-    public Wilk(){
+    public Game(){
         super("Symulacja");
         setLayout(null);
         setSize(1000,900);
@@ -108,7 +102,7 @@ public class Wilk extends JFrame implements ActionListener {
         podajK.setEditable(false);
         podajK.setBounds(810, 90, 250, 19);
 
-        giveK.setBounds(1010,110,100,19);
+        giveK.setBounds(810,110,100,19);
 
         podajRabbitsNumber.setBackground(getBackground());
         podajRabbitsNumber.setEditable(false);
@@ -180,13 +174,13 @@ public class Wilk extends JFrame implements ActionListener {
 
         {
             try {
-                remove(plansza);
+                remove(board);
             }
             catch (Exception e){}
-            plansza = null;
-            plansza = new Plansza(xSize, ySize, startingNumberOfRabbits);
-            add(plansza);
-            plansza.setBounds(0, 0, 800, 800);
+            board = null;
+            board = new Board(xSize, ySize, startingNumberOfRabbits);
+            add(board);
+            board.setBounds(0, 0, 800, 800);
             remainedRabbits.setText("Pozostało zajęcy: "+startingNumberOfRabbits);
             repaint();
             return true;
@@ -236,42 +230,42 @@ public class Wilk extends JFrame implements ActionListener {
             arrayOfDistances[i][0]=i+1;
             switch(i+1){
                 case 1:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY-1)&&plansza.isFieldEmpty(rabbitX-1,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY-1)&& board.isFieldEmpty(rabbitX-1,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY-1);
                     }
                     break;
                 case 2:
-                    if(inRangeOfPlansza(rabbitX,rabbitY-1)&&plansza.isFieldEmpty(rabbitX,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX,rabbitY-1)&& board.isFieldEmpty(rabbitX,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY-1);
                     }
                     break;
                 case 3:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY-1)&&plansza.isFieldEmpty(rabbitX+1,rabbitY-1)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY-1)&& board.isFieldEmpty(rabbitX+1,rabbitY-1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY-1);
                     }
                     break;
                 case 4:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY)&&plansza.isFieldEmpty(rabbitX+1,rabbitY)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY)&& board.isFieldEmpty(rabbitX+1,rabbitY)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY);
                     }
                     break;
                 case 5:
-                    if(inRangeOfPlansza(rabbitX+1,rabbitY+1)&&plansza.isFieldEmpty(rabbitX+1,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX+1,rabbitY+1)&& board.isFieldEmpty(rabbitX+1,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX+1,rabbitY+1);
                     }
                     break;
                 case 6:
-                    if(inRangeOfPlansza(rabbitX,rabbitY+1)&&plansza.isFieldEmpty(rabbitX,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX,rabbitY+1)&& board.isFieldEmpty(rabbitX,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX,rabbitY+1);
                     }
                     break;
                 case 7:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY+1)&&plansza.isFieldEmpty(rabbitX-1,rabbitY+1)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY+1)&& board.isFieldEmpty(rabbitX-1,rabbitY+1)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY+1);
                     }
                     break;
                 case 8:
-                    if(inRangeOfPlansza(rabbitX-1,rabbitY)&&plansza.isFieldEmpty(rabbitX-1,rabbitY)){
+                    if(inRangeOfPlansza(rabbitX-1,rabbitY)&& board.isFieldEmpty(rabbitX-1,rabbitY)){
                         arrayOfDistances[i][1]= distanceToWolf(rabbitX-1,rabbitY);
                     }
                     break;
@@ -284,7 +278,6 @@ public class Wilk extends JFrame implements ActionListener {
             return 0;
         } //dont move, if there is no possible field to jump on
 
-        //sprawdzenie ile jest takich samych maxów
         maxValue=arrayOfDistances[7][1];
         for(int i=6; i>=0; i--){
             if(arrayOfDistances[i][1]==maxValue){
@@ -305,7 +298,7 @@ public class Wilk extends JFrame implements ActionListener {
         int y=r.getyCoord();
         int direciton = fieldToJump(r.getxCoord(),r.getyCoord());
 
-        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.defaultColor);
+        board.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(board.defaultColor);
         switch(direciton){
             case 0:
                 break;
@@ -344,7 +337,7 @@ public class Wilk extends JFrame implements ActionListener {
             default:
                 break;
         }
-        plansza.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(plansza.rabbitColor);
+        board.buttonsArray[r.getxCoord()][r.getyCoord()].setBackground(board.rabbitColor);
     }
 
     private synchronized void moveWolf() {
@@ -369,7 +362,7 @@ public class Wilk extends JFrame implements ActionListener {
         }
         xVector = rabbitsList.get(closetRabbitIndex).getxCoord() - x;
         yVector = rabbitsList.get(closetRabbitIndex).getyCoord() - y;
-        plansza.buttonsArray[x][y].setBackground(plansza.defaultColor);
+        board.buttonsArray[x][y].setBackground(board.defaultColor);
         {
             if (xVector != 0 && yVector != 0) {
                 switch (quaterOfCoord(xVector, yVector)) {
@@ -414,7 +407,7 @@ public class Wilk extends JFrame implements ActionListener {
             return;
         }
 
-        plansza.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(plansza.wolfColor);
+        board.buttonsArray[wolf.getxCoord()][wolf.getyCoord()].setBackground(board.wolfColor);
 
         if(ifThereWasRabbit(x,y)>=0){
             defeatZając(ifThereWasRabbit(x,y));
@@ -488,11 +481,11 @@ public class Wilk extends JFrame implements ActionListener {
             while(true) {
                 newX=randomGenerator.nextInt(xSize);
                 newY=randomGenerator.nextInt(ySize);
-                if(plansza.buttonsArray[newX][newY].getBackground()==plansza.defaultColor) {
+                if(board.buttonsArray[newX][newY].getBackground()== board.defaultColor) {
                     rabbitsList.add(new Rabbit());
                     rabbitsList.get(rabbitsList.size()-1).setxCoord(newX);
                     rabbitsList.get(rabbitsList.size()-1).setyCoord(newY);
-                    plansza.buttonsArray[newX][newY].setBackground(plansza.rabbitColor);
+                    board.buttonsArray[newX][newY].setBackground(board.rabbitColor);
                     //tworzenie wątków:
 
                     threadRabbitList.add(new ThreadRabbit());
@@ -504,12 +497,12 @@ public class Wilk extends JFrame implements ActionListener {
         while(true) {
             newX=randomGenerator.nextInt(xSize);
             newY=randomGenerator.nextInt(ySize);
-            if(plansza.buttonsArray[newX][newY].getBackground()==plansza.defaultColor) {
+            if(board.buttonsArray[newX][newY].getBackground()== board.defaultColor) {
                 wolf =null;
                 wolf = new Wolf();
                 wolf.setxCoord(newX);
                 wolf.setyCoord(newY);
-                plansza.buttonsArray[newX][newY].setBackground(plansza.wolfColor);
+                board.buttonsArray[newX][newY].setBackground(board.wolfColor);
                 threadWolf = new ThreadWolf();
                 break;
             }
