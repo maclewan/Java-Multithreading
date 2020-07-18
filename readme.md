@@ -5,7 +5,7 @@
 	
 
 ## Technologies
-<img src="https://hsto.org/webt/rg/a1/3b/rga13bp-mbl4ljkpbd-fuu6pzfw.png" alt="drawing" height=50px/>
+<img src="https://empirica.pl/wp-content/uploads/2016/01/java8.png" alt="drawing" height=50px/>
 <img src="https://ucarecdn.com/9d0c1b04-20b7-4deb-b211-dda3513c4918/" alt="drawing" height=50px/>
 <img src="https://www.techcentral.ie/wp-content/uploads/2019/07/Java_jdk_logo_web-372x210.jpg" alt="drawing" height=50px/>
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/IntelliJ_IDEA_Logo.svg/1024px-IntelliJ_IDEA_Logo.svg.png" alt="drawing" height=50px/> 
